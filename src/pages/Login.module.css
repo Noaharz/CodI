@@ -1,0 +1,91 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.card {
+  background: white;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  max-width: 400px;
+  text-align: center;
+}
+
+.title {
+  font-size: 32px;
+  font-weight: bold;
+  color: #333;
+  margin: 0 0 10px 0;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: #888;
+  margin: 0 0 30px 0;
+}
+
+.button {
+  width: 100%;
+  padding: 14px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  background: #333;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 30px;
+  transition: background 0.3s;
+}
+
+.button:hover {
+  background: #555;
+}
+
+.icon {
+  font-size: 20px;
+}
+
+.error {
+  background: #ffe0e0;
+  border: 1px solid #ff6b6b;
+  color: #d32f2f;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  font-size: 13px;
+}
+
+.features {
+  text-align: left;
+  background: #f5f5f5;
+  padding: 20px;
+  border-radius: 6px;
+  margin-top: 20px;
+}
+
+.features h3 {
+  font-size: 14px;
+  margin: 0 0 10px 0;
+  color: #333;
+}
+
+.features ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.features li {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 8px;
+}
