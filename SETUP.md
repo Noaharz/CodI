@@ -20,12 +20,35 @@ Eine React-App mit GitHub OAuth, Repo-Browsing und AI-gestütztem Code Review vi
 
 ## Setup Steps
 
-### 1. Supabase Project erstellen
+### 1. Supabase Project erstellen & mit GitHub verbinden
 
 1. Gehe zu https://supabase.com und erstelle ein neues Projekt
-2. Kopiere die URL und anon key:
+2. Kopiere Project-Informationen:
    - `VITE_SUPABASE_URL` = Project URL
    - `VITE_SUPABASE_ANON_KEY` = Anon Key
+   - `PROJECT_REF` = Project ID (für GitHub-Sync)
+
+3. **GitHub-Sync aktivieren** (Infrastructure as Code):
+   ```bash
+   # Supabase CLI installieren
+   npm install -g supabase
+   
+   # Mit Projekt verlinken
+   supabase link --project-ref YOUR_PROJECT_REF
+   
+   # Lokal testen
+   supabase start
+   ```
+
+4. **GitHub Actions Secrets hinzufügen** (für Auto-Deploy):
+   - Repo → Settings → Secrets → `SUPABASE_ACCESS_TOKEN` 
+     - Generiere auf https://app.supabase.com/account/tokens
+   - Repo → Settings → Secrets → `SUPABASE_PROJECT_REF`
+   - Repo → Settings → Secrets → `SUPABASE_DB_PASSWORD`
+
+   → Migrations werden jetzt automatisch zu Supabase deployt! ✅
+
+Siehe [supabase/README.md](supabase/README.md) für Details.
 
 ### 2. GitHub OAuth App registrieren
 
