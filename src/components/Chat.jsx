@@ -40,7 +40,7 @@ export default function Chat({ messages, onAddMessage, githubToken, selectedFile
     setLoading(true);
 
     try {
-      const apiUrl = import.meta.env.VITE_FEATHERLESS_API_URL;
+      const apiUrl = import.meta.env.VITE_FEATHERLESS_API_URL || 'https://api.featherless.ai/v1/messages';
       const apiKey = import.meta.env.VITE_FEATHERLESS_API_KEY;
 
       console.log('🔍 Debug:');
@@ -48,8 +48,8 @@ export default function Chat({ messages, onAddMessage, githubToken, selectedFile
       console.log('API Key exists:', !!apiKey);
       console.log('API Key length:', apiKey?.length);
 
-      if (!apiUrl || !apiKey) {
-        throw new Error('Featherless API not configured');
+      if (!apiKey) {
+        throw new Error('Featherless API key not configured');
       }
 
       // Build context message with instructions for code actions
@@ -85,10 +85,10 @@ Always provide helpful explanations along with the code.`;
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${apiKey}`,
+          'x-api-key': apiKey,
         },
         body: JSON.stringify({
-          model: 'mistralai/Mistral-7B-Instruct-v0.1',
+          model: 'mistral-7b-instruct',
           max_tokens: 1024,
           messages: [
             {

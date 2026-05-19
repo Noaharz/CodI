@@ -1,9 +1,9 @@
 export async function sendCodeReview(code, fileName) {
-  const apiUrl = import.meta.env.VITE_FEATHERLESS_API_URL;
+  const apiUrl = import.meta.env.VITE_FEATHERLESS_API_URL || 'https://api.featherless.ai/v1/messages';
   const apiKey = import.meta.env.VITE_FEATHERLESS_API_KEY;
 
-  if (!apiUrl || !apiKey) {
-    throw new Error('Featherless API credentials not configured');
+  if (!apiKey) {
+    throw new Error('Featherless API key not configured');
   }
 
   try {
@@ -14,7 +14,7 @@ export async function sendCodeReview(code, fileName) {
         'x-api-key': apiKey
       },
       body: JSON.stringify({
-        model: 'claude-opus',
+        model: 'mistral-7b-instruct',
         max_tokens: 2048,
         messages: [
           {

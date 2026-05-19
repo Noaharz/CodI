@@ -1,90 +1,47 @@
-# GitHub Code Reviewer - Setup Guide
+# CodI - Autonomous AI Coding Agent Setup
 
-Eine React-App mit GitHub OAuth, Repo-Browsing und AI-gestütztem Code Review via Featherless API.
+Eine React-App mit GitHub-Integration und autonomer Code-Erstellung via Mistral-7B (Featherless API).
 
 ## Features
 
-✅ GitHub OAuth Login via Supabase  
-✅ Browse public & private repositories  
-✅ AI-powered code review mit Featherless API  
-✅ Terminal-style output (dark theme)  
-✅ Real-time code analysis  
+✅ GitHub Repo Browsing (Token-basiert)  
+✅ AI-powered Autonomous Code Creation  
+✅ Real-time File Editing & Commits  
+✅ Mistral-7B Code Generation  
+✅ Clean, Minimal UI (Google AI Studio Design)  
 
 ## Prerequisites
 
 - Node.js 16+
 - npm oder yarn
-- GitHub account
-- Supabase account
-- Featherless API account
+- GitHub Personal Access Token (mit `repo` scope)
+- Featherless API account (free tier available)
 
 ## Setup Steps
 
-### 1. Supabase Project erstellen & mit GitHub verbinden
+### 1. GitHub Personal Access Token erstellen
 
-1. Gehe zu https://supabase.com und erstelle ein neues Projekt
-2. Kopiere Project-Informationen:
-   - `VITE_SUPABASE_URL` = Project URL
-   - `VITE_SUPABASE_ANON_KEY` = Anon Key
-   - `PROJECT_REF` = Project ID (für GitHub-Sync)
+1. Gehe zu https://github.com/settings/tokens
+2. Klick "Generate new token"
+3. Wähle Scopes: `repo` (full control of repos)
+4. Kopiere den Token - du brauchst ihn später
 
-3. **GitHub-Sync aktivieren** (Infrastructure as Code):
-   ```bash
-   # Supabase CLI installieren
-   npm install -g supabase
-   
-   # Mit Projekt verlinken
-   supabase link --project-ref YOUR_PROJECT_REF
-   
-   # Lokal testen
-   supabase start
-   ```
-
-4. **GitHub Actions Secrets hinzufügen** (für Auto-Deploy):
-   - Repo → Settings → Secrets → `SUPABASE_ACCESS_TOKEN` 
-     - Generiere auf https://app.supabase.com/account/tokens
-   - Repo → Settings → Secrets → `SUPABASE_PROJECT_REF`
-   - Repo → Settings → Secrets → `SUPABASE_DB_PASSWORD`
-
-   → Migrations werden jetzt automatisch zu Supabase deployt! ✅
-
-Siehe [supabase/README.md](supabase/README.md) für Details.
-
-### 2. GitHub OAuth App registrieren
-
-1. Gehe zu https://github.com/settings/developers
-2. Klick auf "New OAuth App"
-3. Fülle aus:
-   - **Application name**: Code Reviewer
-   - **Homepage URL**: `http://localhost:5173`
-   - **Authorization callback URL**: `http://localhost:5173/auth/callback`
-4. Kopiere Client ID & Client Secret
-
-### 3. Supabase GitHub Provider konfigurieren
-
-1. In Supabase Dashboard → Authentication → Providers
-2. Suche "GitHub" und klick enable
-3. Trage Client ID & Client Secret ein von Step 2
-4. Save
-
-### 4. Featherless API einrichten
+### 2. Featherless API einrichten
 
 1. Gehe zu https://featherless.ai und erstelle Account
 2. Generiere API Key
-3. Notiere dir die API URL (meist `https://api.featherless.ai/v1/messages`)
+3. Notiere dir die API URL: `https://api.featherless.ai/v1/messages`
 
-### 5. Environment Variables
+### 3. Environment Variables
 
 Erstelle `.env.local` im Root-Verzeichnis:
 
 ```bash
-VITE_SUPABASE_URL=https://your-project.supabase.co
-VITE_SUPABASE_ANON_KEY=your-anon-key
 VITE_FEATHERLESS_API_URL=https://api.featherless.ai/v1/messages
 VITE_FEATHERLESS_API_KEY=your-featherless-api-key
 ```
 
-### 6. Dependencies installieren & starten
+### 4. Dependencies installieren & starten
 
 ```bash
 npm install
@@ -95,25 +52,22 @@ App lädt unter `http://localhost:5173`
 
 ## Verwendung
 
-1. Klick auf "Sign in with GitHub"
-2. Autorisiere die App auf GitHub
-3. Dashboard lädt deine Repos
-4. Wähle ein Repo aus
-5. Klick "🚀 Start Code Review"
-6. Warte auf AI-Analyse im Terminal-Style Output
+1. Öffne die App auf `http://localhost:5173`
+2. Paste dein GitHub Personal Access Token
+3. Wähle ein Repository
+4. Chatte mit dem AI-Agent - schreib Anforderungen
+5. Der Agent erstellt/editiert Code autonom
+6. Changes werden automatisch committed
 
 ## Troubleshooting
 
 **"Featherless API credentials not configured"**
-- Überprüfe `.env.local` und ENV-Variablen
+- Überprüfe `.env.local` oder Vercel ENV-Variables
+- Stelle sicher `VITE_FEATHERLESS_API_KEY` gesetzt ist
 
 **"GitHub API error"**
-- Prüfe ob GitHub Token gültig ist
-- Überprüfe Supabase GitHub Provider Config
-
-**Repos werden nicht geladen**
-- Überprüfe ob du auf GitHub logged in bist
-- Überprüfe GitHub Scope in AuthContext (sollte `repo` sein)
+- Prüfe ob dein GitHub Token gültig ist
+- Token brauchst `repo` scope
 
 ## Dateistruktur
 
