@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getFileContent } from '../api/github';
+import { getFileContent, commitFile } from '../api/github';
 import styles from './CodeEditor.module.css';
 
 // Simple syntax highlighting - we'll use Highlight.js pattern
@@ -44,6 +44,18 @@ export default function CodeEditor({ file, repo, githubToken }) {
     }
   }, [file]);
 
+  // Ctrl+S / Cmd+S to save
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault();
+        if (modified) handleSave();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [modified, file, content]);
+
   const loadFile = async () => {
     setLoading(true);
     setError(null);
@@ -64,20 +76,25 @@ export default function CodeEditor({ file, repo, githubToken }) {
   };
 
   const handleSave = async () => {
-    if (!modified || !file) return;
+    if (!modified || !file || !repo) return;
 
     setSaving(true);
+    setError(null);
     try {
-      // TODO: Implement GitHub commit API
-      // Will commit changes with message based on context
-      console.log('Saving file:', file.path);
-      console.log('Content length:', content.length);
-
-      // Placeholder - actual commit implementation coming
-      alert('File save with auto-commit coming soon!');
+      await commitFile(
+        githubToken,
+        repo.owner.login,
+        repo.name,
+        file.path,
+        content,
+        `Update ${file.name}`
+      );
       setModified(false);
+      // Optional: Show success toast
+      console.log('✅ File saved to GitHub:', file.path);
     } catch (err) {
       setError(err.message);
+      console.error('Save error:', err);
     } finally {
       setSaving(false);
     }

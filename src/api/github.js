@@ -71,6 +71,40 @@ export async function getFileContent(githubToken, owner, repo, path) {
   }
 }
 
+export async function commitFile(githubToken, owner, repo, path, content, message) {
+  try {
+    // Get current file SHA for update
+    const currentFile = await getRepoContents(githubToken, owner, repo, path);
+    const currentSha = Array.isArray(currentFile) ? null : currentFile.sha;
+
+    const response = await fetch(
+      `${GITHUB_API_URL}/repos/${owner}/${repo}/contents/${path}`,
+      {
+        method: 'PUT',
+        headers: {
+          Authorization: `token ${githubToken}`,
+          Accept: 'application/vnd.github.v3+json',
+        },
+        body: JSON.stringify({
+          message: message || `Update ${path}`,
+          content: btoa(content), // Base64 encode
+          sha: currentSha,
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(`GitHub API error: ${error.message}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error committing file:', error);
+    throw error;
+  }
+}
+
 export async function getRepoMainFiles(githubToken, owner, repo) {
   try {
     const contents = await getRepoContents(githubToken, owner, repo);
