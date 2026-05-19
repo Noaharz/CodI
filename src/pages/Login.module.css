@@ -3,79 +3,90 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #f9fafb;
 }
 
 .card {
   background: white;
-  padding: 40px;
-  border-radius: 10px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-  max-width: 400px;
+  padding: 48px;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e5e7eb;
+  max-width: 420px;
   text-align: center;
 }
 
 .title {
-  font-size: 32px;
-  font-weight: bold;
-  color: #333;
-  margin: 0 0 10px 0;
+  font-size: 28px;
+  font-weight: 600;
+  color: #111;
+  margin: 0 0 8px 0;
+  letter-spacing: -0.5px;
 }
 
 .subtitle {
   font-size: 14px;
-  color: #888;
-  margin: 0 0 30px 0;
+  color: #6b7280;
+  margin: 0 0 32px 0;
+  font-weight: 400;
 }
 
 .button {
   width: 100%;
-  padding: 14px 20px;
-  font-size: 16px;
-  font-weight: bold;
+  padding: 12px 16px;
+  font-size: 15px;
+  font-weight: 500;
   color: white;
-  background: #333;
+  background: #111;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  margin-bottom: 30px;
-  transition: background 0.3s;
+  gap: 8px;
+  margin-bottom: 32px;
+  transition: all 0.2s;
 }
 
-.button:hover {
-  background: #555;
+.button:hover:not(:disabled) {
+  background: #1f2937;
+}
+
+.button:active:not(:disabled) {
+  background: #111;
 }
 
 .icon {
-  font-size: 20px;
+  font-size: 18px;
 }
 
 .error {
-  background: #ffe0e0;
-  border: 1px solid #ff6b6b;
-  color: #d32f2f;
-  padding: 10px;
-  border-radius: 4px;
-  margin-bottom: 20px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+  padding: 12px 14px;
+  border-radius: 8px;
+  margin-bottom: 24px;
   font-size: 13px;
+  font-weight: 500;
 }
 
 .features {
   text-align: left;
-  background: #f5f5f5;
+  background: #f3f4f6;
   padding: 20px;
-  border-radius: 6px;
-  margin-top: 20px;
+  border-radius: 8px;
+  margin-top: 24px;
 }
 
 .features h3 {
-  font-size: 14px;
-  margin: 0 0 10px 0;
-  color: #333;
+  font-size: 13px;
+  margin: 0 0 12px 0;
+  color: #111;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .features ul {
@@ -86,64 +97,70 @@
 
 .features li {
   font-size: 13px;
-  color: #666;
+  color: #4b5563;
   margin-bottom: 8px;
+  line-height: 1.5;
 }
 
 .tokenForm {
   text-align: left;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 16px;
 }
 
 .label {
-  font-weight: 600;
-  color: #333;
+  font-weight: 500;
+  color: #111;
   font-size: 14px;
 }
 
 .tokenInput {
   width: 100%;
-  padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  font-family: monospace;
+  padding: 12px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
   font-size: 12px;
   resize: vertical;
   min-height: 100px;
   box-sizing: border-box;
-  font-size: 13px;
+  background: #fafbfc;
+  color: #111;
+  line-height: 1.5;
 }
 
 .tokenInput:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: #111;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(17, 17, 17, 0.05);
 }
 
 .hint {
   font-size: 12px;
-  color: #666;
+  color: #6b7280;
   margin: 0;
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
 .hint a {
-  color: #667eea;
-  text-decoration: none;
+  color: #111;
+  text-decoration: underline;
+  font-weight: 500;
 }
 
 .hint a:hover {
-  text-decoration: underline;
+  color: #4b5563;
 }
 
 .hint code {
-  background: #f5f5f5;
-  padding: 2px 6px;
-  border-radius: 3px;
-  font-family: monospace;
+  background: #f3f4f6;
+  padding: 3px 7px;
+  border-radius: 4px;
+  font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
   font-size: 11px;
+  color: #111;
 }
 
 .buttonGroup {
@@ -159,23 +176,24 @@
 
 .buttonSecondary {
   flex: 1;
-  padding: 14px 20px;
-  font-size: 16px;
-  font-weight: bold;
-  color: #333;
-  background: #f0f0f0;
-  border: 1px solid #ddd;
-  border-radius: 6px;
+  padding: 12px 16px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #4b5563;
+  background: white;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: all 0.2s;
 }
 
-.buttonSecondary:hover {
-  background: #e0e0e0;
+.buttonSecondary:hover:not(:disabled) {
+  background: #f9fafb;
+  border-color: #9ca3af;
 }
 
 .button:disabled,
 .buttonSecondary:disabled {
-  opacity: 0.6;
+  opacity: 0.5;
   cursor: not-allowed;
 }

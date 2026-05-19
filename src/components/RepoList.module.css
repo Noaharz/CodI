@@ -1,6 +1,5 @@
 .container {
   padding: 20px;
-  border-right: 1px solid #e0e0e0;
   height: 100%;
   overflow-y: auto;
 }
@@ -10,35 +9,44 @@
 }
 
 .header h2 {
-  margin: 0 0 8px 0;
-  font-size: 20px;
-  color: #333;
+  margin: 0 0 6px 0;
+  font-size: 16px;
+  color: #111;
+  font-weight: 600;
 }
 
 .count {
   margin: 0;
-  font-size: 13px;
-  color: #888;
+  font-size: 12px;
+  color: #9ca3af;
+  font-weight: 400;
 }
 
 .controls {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .search {
   width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
   font-size: 13px;
   margin-bottom: 10px;
   box-sizing: border-box;
+  background: #fafbfc;
+  color: #111;
+}
+
+.search::placeholder {
+  color: #9ca3af;
 }
 
 .search:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: #111;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(17, 17, 17, 0.05);
 }
 
 .filters {
@@ -49,22 +57,25 @@
 .filters button {
   flex: 1;
   padding: 8px 12px;
-  border: 1px solid #ddd;
+  border: 1px solid #d1d5db;
   background: white;
-  border-radius: 4px;
+  border-radius: 6px;
   font-size: 12px;
+  font-weight: 500;
   cursor: pointer;
+  color: #4b5563;
   transition: all 0.2s;
 }
 
 .filters button:hover {
-  background: #f5f5f5;
+  background: #f9fafb;
+  border-color: #9ca3af;
 }
 
 .filters button.active {
-  background: #667eea;
+  background: #111;
   color: white;
-  border-color: #667eea;
+  border-color: #111;
 }
 
 .loading,
@@ -72,46 +83,52 @@
 .empty {
   padding: 20px;
   text-align: center;
-  color: #666;
+  color: #6b7280;
   font-size: 13px;
 }
 
 .error {
-  background: #ffe0e0;
-  color: #d32f2f;
-  border-radius: 4px;
+  background: #fef2f2;
+  color: #991b1b;
+  border-radius: 6px;
+  border: 1px solid #fecaca;
 }
 
 .repoList {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
 .repoItem {
   padding: 12px;
-  border: 1px solid #e0e0e0;
+  border: 1px solid #e5e7eb;
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s;
+  background: white;
 }
 
 .repoItem:hover {
-  background: #f9f9f9;
-  border-color: #667eea;
-  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
+  background: #f9fafb;
+  border-color: #9ca3af;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.repoItem:active {
+  background: #f3f4f6;
 }
 
 .repoName {
-  font-weight: bold;
-  color: #333;
-  font-size: 14px;
+  font-weight: 600;
+  color: #111;
+  font-size: 13px;
   margin-bottom: 8px;
 }
 
 .repoMeta {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   margin-bottom: 8px;
   flex-wrap: wrap;
 }
@@ -120,26 +137,27 @@
 .public,
 .language,
 .stars {
-  font-size: 12px;
-  padding: 2px 6px;
-  border-radius: 3px;
-  background: #f0f0f0;
-  color: #666;
+  font-size: 11px;
+  padding: 3px 6px;
+  border-radius: 4px;
+  background: #f3f4f6;
+  color: #4b5563;
+  font-weight: 500;
 }
 
 .private {
-  background: #ffe0e0;
-  color: #d32f2f;
+  background: #fef2f2;
+  color: #991b1b;
 }
 
 .public {
-  background: #e0f0ff;
-  color: #0066cc;
+  background: #f0f9ff;
+  color: #0c4a6e;
 }
 
 .description {
   font-size: 12px;
-  color: #888;
+  color: #6b7280;
   margin: 0;
   line-height: 1.4;
   overflow: hidden;
