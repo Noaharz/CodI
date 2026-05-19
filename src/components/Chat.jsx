@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { parseAndExecuteCodeActions } from '../api/codeActions';
 import styles from './Chat.module.css';
 
 export default function Chat({ messages, onAddMessage, githubToken, selectedFile, selectedRepo }) {
@@ -51,11 +52,34 @@ export default function Chat({ messages, onAddMessage, githubToken, selectedFile
         throw new Error('Featherless API not configured');
       }
 
-      // Build context message
+      // Build context message with instructions for code actions
       let contextMessage = userMessage;
       if (selectedFile) {
         contextMessage = `Context: Working with file "${selectedFile.name}" in repo "${selectedRepo?.name}"\n\n${userMessage}`;
       }
+
+      // Add system prompt for code generation
+      const systemPrompt = `You are CodI, an AI coding agent. When the user asks you to create files or write code:
+
+1. To CREATE a new file, use this format:
+\`\`\`create:filename.ext
+code content here
+\`\`\`
+
+2. To UPDATE an existing file, use:
+\`\`\`update:filename.ext
+new code content here
+\`\`\`
+
+3. After creating files, explain what you did.
+
+Examples:
+- "Create a hello world script" → creates hello.js with code
+- "Write a function to calculate sum" → creates utils.js with the function
+
+Always provide helpful explanations along with the code.`;
+
+      contextMessage = systemPrompt + '\n\n' + contextMessage;
 
       const response = await fetch(apiUrl, {
         method: 'POST',
@@ -82,6 +106,42 @@ export default function Chat({ messages, onAddMessage, githubToken, selectedFile
 
       const data = await response.json();
       const assistantMessage = data.content?.[0]?.text || 'No response';
+
+      // Parse code actions from response
+      const actions = await parseAndExecuteCodeActions(
+        assistantMessage,
+        githubToken,
+        selectedRepo
+      );
+
+      // If there are auto-executable actions, execute them
+      if (actions.length > 0) {
+        console.log(`🤖 Found ${actions.length} code actions to execute`);
+        try {
+          for (const action of actions) {
+            console.log(`Executing: ${action.type} ${action.filename}`);
+            await action.execute();
+          }
+          // Add confirmation message
+          const confirmMsg = actions
+            .map((a) => `✅ ${a.type} ${a.filename}`)
+            .join('\n');
+          onAddMessage({
+            id: Date.now() + 1.5,
+            role: 'system',
+            content: `Code actions executed:\n${confirmMsg}`,
+            timestamp: new Date(),
+          });
+        } catch (actionError) {
+          console.error('Action execution failed:', actionError);
+          onAddMessage({
+            id: Date.now() + 1.5,
+            role: 'system',
+            content: `⚠️ Action failed: ${actionError.message}`,
+            timestamp: new Date(),
+          });
+        }
+      }
 
       onAddMessage({
         id: Date.now() + 1,
