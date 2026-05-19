@@ -42,6 +42,11 @@ export default function Chat({ messages, onAddMessage, githubToken, selectedFile
       const apiUrl = import.meta.env.VITE_FEATHERLESS_API_URL;
       const apiKey = import.meta.env.VITE_FEATHERLESS_API_KEY;
 
+      console.log('🔍 Debug:');
+      console.log('API URL:', apiUrl);
+      console.log('API Key exists:', !!apiKey);
+      console.log('API Key length:', apiKey?.length);
+
       if (!apiUrl || !apiKey) {
         throw new Error('Featherless API not configured');
       }
