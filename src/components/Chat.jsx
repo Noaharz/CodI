@@ -56,7 +56,7 @@ export default function Chat({ messages, onAddMessage, githubToken, selectedFile
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-api-key': apiKey,
+          'Authorization': `Bearer ${apiKey}`,
         },
         body: JSON.stringify({
           model: 'claude-opus',
