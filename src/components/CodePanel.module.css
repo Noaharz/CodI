@@ -1,0 +1,51 @@
+.codePanel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: white;
+}
+
+.toggleBar {
+  display: none;
+  padding: 0 8px;
+  gap: 4px;
+  border-bottom: 1px solid #e5e7eb;
+  height: 40px;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.toggleBtn {
+  padding: 6px 12px;
+  border: none;
+  background: transparent;
+  color: #6b7280;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+}
+
+.toggleBtn:hover {
+  color: #111;
+}
+
+.toggleBtn.active {
+  color: #111;
+  border-bottom-color: #111;
+}
+
+.content {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Show toggle on mobile */
+@media (max-width: 900px) {
+  .toggleBar {
+    display: flex;
+  }
+}

@@ -5,95 +5,53 @@
   background: #f9fafb;
 }
 
-.header {
-  background: white;
-  border-bottom: 1px solid #e5e7eb;
-  padding: 16px 24px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-}
-
-.logo h1 {
-  margin: 0;
-  font-size: 18px;
-  color: #111;
-  font-weight: 600;
-  letter-spacing: -0.3px;
-}
-
-.userInfo {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.userName {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 13px;
-  color: #6b7280;
-  font-weight: 500;
-}
-
-.avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  border: 1px solid #e5e7eb;
-  object-fit: cover;
-}
-
-.logoutButton {
-  padding: 8px 14px;
-  background: white;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 12px;
-  font-weight: 500;
-  color: #4b5563;
-  transition: all 0.2s;
-}
-
-.logoutButton:hover {
-  background: #f9fafb;
-  border-color: #9ca3af;
-}
-
-.logoutButton:active {
-  background: #f3f4f6;
-}
-
-.main {
+.mainContent {
   display: flex;
   flex: 1;
   overflow: hidden;
   gap: 0;
 }
 
-.sidebar {
-  width: 28%;
-  min-width: 280px;
+.chatSidebar {
+  width: 25%;
+  min-width: 300px;
   background: white;
-  overflow-y: auto;
   border-right: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
 }
 
-.content {
+.codePanel {
   flex: 1;
   background: white;
-  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.emptyState {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+@media (max-width: 1024px) {
+  .chatSidebar {
+    width: 30%;
+    min-width: 250px;
+  }
 }
 
 @media (max-width: 768px) {
-  .main {
+  .mainContent {
     flex-direction: column;
   }
 
-  .sidebar {
+  .chatSidebar {
     width: 100%;
     min-width: auto;
     border-right: none;
@@ -101,17 +59,7 @@
     max-height: 40%;
   }
 
-  .content {
+  .codePanel {
     flex: 1;
-  }
-
-  .header {
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-
-  .userInfo {
-    width: 100%;
-    justify-content: flex-end;
   }
 }

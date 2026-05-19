@@ -1,0 +1,119 @@
+import { useState, useRef, useEffect } from 'react';
+import styles from './Chat.module.css';
+
+export default function Chat({ messages, onAddMessage, githubToken, selectedFile, selectedRepo }) {
+  const [input, setInput] = useState('');
+  const [loading, setLoading] = useState(false);
+  const messagesEndRef = useRef(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  const handleSendMessage = async (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      if (input.trim()) {
+        await sendMessage();
+      }
+    }
+  };
+
+  const sendMessage = async () => {
+    const userMessage = input.trim();
+    if (!userMessage) return;
+
+    // Add user message
+    onAddMessage({
+      id: Date.now(),
+      role: 'user',
+      content: userMessage,
+      timestamp: new Date(),
+    });
+
+    setInput('');
+    setLoading(true);
+
+    try {
+      // TODO: Send to Claude API with context
+      // For now, show a placeholder response
+      setTimeout(() => {
+        onAddMessage({
+          id: Date.now() + 1,
+          role: 'assistant',
+          content:
+            'I\'m analyzing your code... This feature will be connected to Claude API soon.',
+          timestamp: new Date(),
+        });
+        setLoading(false);
+      }, 800);
+    } catch (error) {
+      console.error('Failed to send message:', error);
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className={styles.chatContainer}>
+      <div className={styles.chatHeader}>
+        <h3 className={styles.chatTitle}>CodI Assistant</h3>
+      </div>
+
+      <div className={styles.messagesContainer}>
+        {messages.length === 0 ? (
+          <div className={styles.emptyState}>
+            <p className={styles.emptyTitle}>Start a conversation</p>
+            <p className={styles.emptyText}>
+              {selectedFile
+                ? `Ask about ${selectedFile.name}`
+                : 'Select a file to discuss'}
+            </p>
+          </div>
+        ) : (
+          messages.map((msg) => (
+            <div
+              key={msg.id}
+              className={`${styles.message} ${styles[msg.role]}`}
+            >
+              <div className={styles.messageBubble}>
+                {msg.content}
+              </div>
+            </div>
+          ))
+        )}
+        {loading && (
+          <div className={`${styles.message} ${styles.assistant}`}>
+            <div className={styles.messageBubble}>
+              <span className={styles.typing}>
+                <span></span><span></span><span></span>
+              </span>
+            </div>
+          </div>
+        )}
+        <div ref={messagesEndRef} />
+      </div>
+
+      <div className={styles.inputArea}>
+        <textarea
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={handleSendMessage}
+          placeholder="Type your question... (Press Enter to send)"
+          className={styles.input}
+          disabled={loading}
+        />
+        <button
+          onClick={sendMessage}
+          disabled={loading || !input.trim()}
+          className={styles.sendButton}
+        >
+          {loading ? '...' : '↑'}
+        </button>
+      </div>
+    </div>
+  );
+}

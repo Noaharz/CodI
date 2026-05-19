@@ -1,13 +1,16 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import RepoList from '../components/RepoList';
-import CodeReview from '../components/CodeReview';
+import Header from '../components/Header';
+import Chat from '../components/Chat';
+import CodePanel from '../components/CodePanel';
 import styles from './Dashboard.module.css';
 
 export default function Dashboard() {
   const { user, githubToken, signOut } = useAuth();
   const [selectedRepo, setSelectedRepo] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [chatMessages, setChatMessages] = useState([]);
   const navigate = useNavigate();
 
   if (!user || !githubToken) {
@@ -15,40 +18,47 @@ export default function Dashboard() {
     return null;
   }
 
-  const handleLogout = async () => {
-    await signOut();
-    navigate('/login');
+  const handleAddMessage = (message) => {
+    setChatMessages([...chatMessages, message]);
   };
 
   return (
     <div className={styles.container}>
-      <header className={styles.header}>
-        <div className={styles.logo}>
-          <h1>💻 Code Reviewer</h1>
-        </div>
-        <div className={styles.userInfo}>
-          <div className={styles.userName}>
-            <img src={user.user_metadata?.avatar_url} alt={user.email} className={styles.avatar} />
-            <span>{user.user_metadata?.name || user.email}</span>
-          </div>
-          <button onClick={handleLogout} className={styles.logoutButton}>
-            Logout
-          </button>
-        </div>
-      </header>
+      <Header
+        user={user}
+        selectedRepo={selectedRepo}
+        onSelectRepo={setSelectedRepo}
+        onLogout={() => {
+          signOut();
+          navigate('/login');
+        }}
+        githubToken={githubToken}
+      />
 
-      <div className={styles.main}>
-        <div className={styles.sidebar}>
-          <RepoList
+      <div className={styles.mainContent}>
+        <div className={styles.chatSidebar}>
+          <Chat
+            messages={chatMessages}
+            onAddMessage={handleAddMessage}
             githubToken={githubToken}
-            onSelectRepo={setSelectedRepo}
+            selectedFile={selectedFile}
+            selectedRepo={selectedRepo}
           />
         </div>
-        <div className={styles.content}>
-          <CodeReview
-            repo={selectedRepo}
-            githubToken={githubToken}
-          />
+
+        <div className={styles.codePanel}>
+          {selectedRepo ? (
+            <CodePanel
+              repo={selectedRepo}
+              githubToken={githubToken}
+              selectedFile={selectedFile}
+              onSelectFile={setSelectedFile}
+            />
+          ) : (
+            <div className={styles.emptyState}>
+              <p>Select a repository to start coding</p>
+            </div>
+          )}
         </div>
       </div>
     </div>
