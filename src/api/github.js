@@ -32,6 +32,11 @@ export async function getRepoContents(githubToken, owner, repo, path = '') {
       }
     );
 
+    // Empty repo returns 404 - handle gracefully
+    if (response.status === 404 && !path) {
+      return [];
+    }
+
     if (!response.ok) {
       throw new Error(`GitHub API error: ${response.statusText}`);
     }
