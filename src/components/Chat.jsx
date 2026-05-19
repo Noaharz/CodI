@@ -91,7 +91,7 @@ REMEMBER: Code block FIRST, no talking before it.`;
           'x-api-key': apiKey,
         },
         body: JSON.stringify({
-          model: 'meta-llama/Llama-3-8b-chat-hf',
+          model: 'mistralai/Mistral-7B-Instruct-v0.1',
           max_tokens: 1024,
           messages: [
             {
