@@ -7,12 +7,13 @@ export async function parseAndExecuteCodeActions(response, githubToken, repo) {
   // Pattern: ```create:filename.ext
   // code here
   // ```
-  const createPattern = /```create:([^\s]+)\n([\s\S]*?)\n```/g;
+  // More flexible: capture filename and code, handle various whitespace
+  const createPattern = /```create:([^\n`]+?)(?:\n|\s)([\s\S]*?)```/g;
   let match;
 
   while ((match = createPattern.exec(response)) !== null) {
-    const filename = match[1];
-    const code = match[2];
+    let filename = match[1].trim();
+    let code = match[2].trim();
 
     actions.push({
       type: 'create',
@@ -35,10 +36,10 @@ export async function parseAndExecuteCodeActions(response, githubToken, repo) {
   // Pattern: ```update:filename.ext
   // code here
   // ```
-  const updatePattern = /```update:([^\s]+)\n([\s\S]*?)\n```/g;
+  const updatePattern = /```update:([^\n`]+?)(?:\n|\s)([\s\S]*?)```/g;
   while ((match = updatePattern.exec(response)) !== null) {
-    const filename = match[1];
-    const code = match[2];
+    let filename = match[1].trim();
+    let code = match[2].trim();
 
     actions.push({
       type: 'update',
@@ -56,6 +57,11 @@ export async function parseAndExecuteCodeActions(response, githubToken, repo) {
         return result;
       },
     });
+  }
+
+  console.log(`✅ Parsed ${actions.length} code actions`);
+  if (actions.length > 0) {
+    actions.forEach(a => console.log(`  - ${a.type}: ${a.filename}`));
   }
 
   return actions;
