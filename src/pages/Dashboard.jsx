@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import Header from '../components/Header';
@@ -13,10 +13,11 @@ export default function Dashboard() {
   const [chatMessages, setChatMessages] = useState([]);
   const navigate = useNavigate();
 
-  if (!user || !githubToken) {
-    navigate('/login');
-    return null;
-  }
+  useEffect(() => {
+    if (!user || !githubToken) {
+      navigate('/login');
+    }
+  }, [user, githubToken, navigate]);
 
   const handleAddMessage = (message) => {
     setChatMessages([...chatMessages, message]);
