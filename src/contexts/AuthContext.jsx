@@ -1,12 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { createClient } from '@supabase/supabase-js';
 
 const AuthContext = createContext();
-
-const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL,
-  import.meta.env.VITE_SUPABASE_ANON_KEY
-);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
@@ -14,61 +8,66 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Check for stored token on mount
   useEffect(() => {
-    const initAuth = async () => {
-      try {
-        const { data: { session } } = await supabase.auth.getSession();
+    const storedToken = localStorage.getItem('github_token');
+    const storedUser = localStorage.getItem('github_user');
 
-        if (session?.user) {
-          setUser(session.user);
-          setGithubToken(session.provider_token);
-        }
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    initAuth();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        if (session?.user) {
-          setUser(session.user);
-          setGithubToken(session.provider_token);
-        } else {
-          setUser(null);
-          setGithubToken(null);
-        }
-      }
-    );
-
-    return () => {
-      subscription?.unsubscribe();
-    };
+    if (storedToken && storedUser) {
+      setGithubToken(storedToken);
+      setUser(JSON.parse(storedUser));
+    }
+    setLoading(false);
   }, []);
 
   const signInWithGithub = async () => {
     try {
       setError(null);
-      const { error: signInError } = await supabase.auth.signInWithOAuth({
-        provider: 'github',
-        options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
-          scopes: 'repo'
+      setLoading(true);
+
+      // Call Vercel API function
+      const response = await fetch('/api/auth-github');
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message || data.error);
+      }
+
+      const { token } = await response.json();
+
+      // Get user info from GitHub
+      const userResponse = await fetch('https://api.github.com/user', {
+        headers: {
+          'Authorization': `token ${token}`,
+          'Accept': 'application/vnd.github.v3+json'
         }
       });
-      if (signInError) throw signInError;
+
+      if (!userResponse.ok) {
+        throw new Error('Failed to fetch user info from GitHub');
+      }
+
+      const userData = await userResponse.json();
+
+      // Store in localStorage and state
+      localStorage.setItem('github_token', token);
+      localStorage.setItem('github_user', JSON.stringify(userData));
+
+      setGithubToken(token);
+      setUser(userData);
     } catch (err) {
       setError(err.message);
+      console.error('GitHub sign-in error:', err);
+    } finally {
+      setLoading(false);
     }
   };
 
   const signOut = async () => {
     try {
       setError(null);
-      await supabase.auth.signOut();
+      localStorage.removeItem('github_token');
+      localStorage.removeItem('github_user');
       setUser(null);
       setGithubToken(null);
     } catch (err) {
