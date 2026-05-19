@@ -20,22 +20,12 @@ export function AuthProvider({ children }) {
     setLoading(false);
   }, []);
 
-  const signInWithGithub = async () => {
+  const signInWithToken = async (token) => {
     try {
       setError(null);
       setLoading(true);
 
-      // Call Vercel API function
-      const response = await fetch('/api/auth-github');
-
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.message || data.error);
-      }
-
-      const { token } = await response.json();
-
-      // Get user info from GitHub
+      // Verify token and get user info from GitHub
       const userResponse = await fetch('https://api.github.com/user', {
         headers: {
           'Authorization': `token ${token}`,
@@ -44,7 +34,8 @@ export function AuthProvider({ children }) {
       });
 
       if (!userResponse.ok) {
-        throw new Error('Failed to fetch user info from GitHub');
+        const errorData = await userResponse.json();
+        throw new Error(errorData.message || 'Invalid token');
       }
 
       const userData = await userResponse.json();
@@ -81,7 +72,7 @@ export function AuthProvider({ children }) {
       githubToken,
       loading,
       error,
-      signInWithGithub,
+      signInWithToken,
       signOut
     }}>
       {children}
