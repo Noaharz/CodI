@@ -41,3 +41,5 @@ Thumbs.db
 
 # Testing
 .cache/
+.vercel
+.env*.local

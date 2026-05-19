@@ -41,7 +41,7 @@ ${code}
     }
 
     const data = await response.json();
-    return data.content?.[0]?.text || 'No review generated';
+    return data.choices?.[0]?.message?.content || data.content?.[0]?.text || 'No review generated';
   } catch (error) {
     console.error('Error sending code review:', error);
     throw error;

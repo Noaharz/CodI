@@ -105,7 +105,7 @@ Always provide helpful explanations along with the code.`;
       }
 
       const data = await response.json();
-      const assistantMessage = data.content?.[0]?.text || 'No response';
+      const assistantMessage = data.choices?.[0]?.message?.content || data.content?.[0]?.text || 'No response';
 
       // Parse code actions from response
       const actions = await parseAndExecuteCodeActions(
