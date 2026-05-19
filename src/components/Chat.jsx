@@ -64,8 +64,8 @@ export default function Chat({ messages, onAddMessage, githubToken, selectedFile
           'Authorization': `Bearer ${apiKey}`,
         },
         body: JSON.stringify({
-          model: 'claude-opus',
-          max_tokens: 2048,
+          model: 'mistralai/Mistral-7B-Instruct-v0.1',
+          max_tokens: 1024,
           messages: [
             {
               role: 'user',
