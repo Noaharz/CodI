@@ -69,10 +69,13 @@ export default function CodeEditor({ file, repo, githubToken }) {
     setSaving(true);
     try {
       // TODO: Implement GitHub commit API
-      // For now, just show placeholder
-      console.log('Saving to:', file.path);
+      // Will commit changes with message based on context
+      console.log('Saving file:', file.path);
+      console.log('Content length:', content.length);
+
+      // Placeholder - actual commit implementation coming
+      alert('File save with auto-commit coming soon!');
       setModified(false);
-      alert('Save feature coming soon!');
     } catch (err) {
       setError(err.message);
     } finally {

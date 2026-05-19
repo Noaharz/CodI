@@ -39,20 +39,44 @@ export default function Chat({ messages, onAddMessage, githubToken, selectedFile
     setLoading(true);
 
     try {
-      // TODO: Send to Claude API with context
-      // For now, show a placeholder response
-      setTimeout(() => {
-        onAddMessage({
-          id: Date.now() + 1,
-          role: 'assistant',
-          content:
-            'I\'m analyzing your code... This feature will be connected to Claude API soon.',
-          timestamp: new Date(),
-        });
-        setLoading(false);
-      }, 800);
+      // Send to Featherless API
+      const response = await fetch('https://api.featherless.ai/code-review', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${import.meta.env.VITE_FEATHERLESS_API_KEY}`,
+        },
+        body: JSON.stringify({
+          message: userMessage,
+          context: selectedFile ? {
+            fileName: selectedFile.name,
+            filePath: selectedFile.path,
+            repo: selectedRepo?.name,
+          } : null,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Featherless API error: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+
+      onAddMessage({
+        id: Date.now() + 1,
+        role: 'assistant',
+        content: data.response || data.message || 'No response',
+        timestamp: new Date(),
+      });
     } catch (error) {
       console.error('Failed to send message:', error);
+      onAddMessage({
+        id: Date.now() + 1,
+        role: 'assistant',
+        content: `Error: ${error.message}`,
+        timestamp: new Date(),
+      });
+    } finally {
       setLoading(false);
     }
   };
