@@ -39,33 +39,49 @@ export default function Chat({ messages, onAddMessage, githubToken, selectedFile
     setLoading(true);
 
     try {
-      // Send to Featherless API
-      const response = await fetch('https://api.featherless.ai/code-review', {
+      const apiUrl = import.meta.env.VITE_FEATHERLESS_API_URL;
+      const apiKey = import.meta.env.VITE_FEATHERLESS_API_KEY;
+
+      if (!apiUrl || !apiKey) {
+        throw new Error('Featherless API not configured');
+      }
+
+      // Build context message
+      let contextMessage = userMessage;
+      if (selectedFile) {
+        contextMessage = `Context: Working with file "${selectedFile.name}" in repo "${selectedRepo?.name}"\n\n${userMessage}`;
+      }
+
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${import.meta.env.VITE_FEATHERLESS_API_KEY}`,
+          'x-api-key': apiKey,
         },
         body: JSON.stringify({
-          message: userMessage,
-          context: selectedFile ? {
-            fileName: selectedFile.name,
-            filePath: selectedFile.path,
-            repo: selectedRepo?.name,
-          } : null,
+          model: 'claude-opus',
+          max_tokens: 2048,
+          messages: [
+            {
+              role: 'user',
+              content: contextMessage,
+            },
+          ],
         }),
       });
 
       if (!response.ok) {
-        throw new Error(`Featherless API error: ${response.statusText}`);
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(`${response.status}: ${errorData.error?.message || response.statusText}`);
       }
 
       const data = await response.json();
+      const assistantMessage = data.content?.[0]?.text || 'No response';
 
       onAddMessage({
         id: Date.now() + 1,
         role: 'assistant',
-        content: data.response || data.message || 'No response',
+        content: assistantMessage,
         timestamp: new Date(),
       });
     } catch (error) {
@@ -73,7 +89,7 @@ export default function Chat({ messages, onAddMessage, githubToken, selectedFile
       onAddMessage({
         id: Date.now() + 1,
         role: 'assistant',
-        content: `Error: ${error.message}`,
+        content: `⚠️ Error: ${error.message}`,
         timestamp: new Date(),
       });
     } finally {
